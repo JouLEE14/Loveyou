@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Yes or No Game</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      background: #ffe4f0; /* soft pink background */
+      overflow: hidden;
+      color: #6a3d6f; /* sweet purple-ish text */
+    }
+    img.main-image {
+      width: 200px;
+      margin-top: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(255, 192, 203, 0.5);
+    }
+    h2 {
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    .box {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      border: 5px dashed #d98bb6; /* pink dashed border */
+      margin-top: 20px;
+      overflow: hidden;
+      background: #fff0f6;
+    }
+    button {
+      position: absolute;
+      padding: 12px 24px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 30px;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+      transition: transform 0.3s ease, font-size 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+    button:disabled {
+      cursor: default;
+      opacity: 0.6;
+      box-shadow: none;
+    }
+    #yesBtn {
+      left: 40%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #27ae60; /* nice green */
+      z-index: 2;
+    }
+    #noBtn {
+      left: 60%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #e74c3c; /* bright red */
+      z-index: 2;
+    }
+    #againBtn {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #d46fbf; /* sweet pink-purple */
+      padding: 14px 32px;
+      font-size: 20px;
+      display: none;
+      box-shadow: 0 6px 18px rgba(212, 111, 191, 0.6);
+      z-index: 4;
+    }
+    #message {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 28px;
+      color: #af52bf;
+      font-weight: bold;
+      z-index: 3;
+      text-shadow: 0 0 6px #d98bb6;
+    }
+    #info {
+      position: absolute;
+      top: 60px;
+      width: 100%;
+      text-align: center;
+      font-size: 20px;
+      color: #6a3d6f;
+      font-weight: normal;
+      z-index: 3;
+      padding: 0 20px;
+      box-sizing: border-box;
+      text-shadow: 0 0 4px #d98bb6;
+    }
+    #congratsImage {
+      position: absolute;
+      top: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 300px;
+      display: none;
+      z-index: 3;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.7);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box" id="buttonBox">
+
+    <div id="mainContent">
+      <img src="/maxresdefault.jpg" alt="Main Image" class="main-image" />
+      <h2>ເເຕ່ງງານກັນນະ?  ຍ່າຮົ້ວ..........ນະ</h2>
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
+    </div>
+
+    <div id="message"></div>
+    <div id="info"></div>
+    <img id="congratsImage" src="OIP.webp" alt="Congratulations" />
+    <button id="againBtn">Again</button>
+
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const againBtn = document.getElementById('againBtn');
+    const message = document.getElementById('message');
+    const info = document.getElementById('info');
+    const congratsImage = document.getElementById('congratsImage');
+    const box = document.getElementById('buttonBox');
+    const mainContent = document.getElementById('mainContent');
+    let clickCount = 0;
+
+    function resetGame() {
+      clickCount = 0;
+      message.textContent = "";
+      info.textContent = "";
+      congratsImage.style.display = 'none';
+      yesBtn.disabled = false;
+      noBtn.disabled = false;
+      noBtn.style.display = 'block';
+      noBtn.style.transform = 'scale(1)';
+      noBtn.style.left = '60%';
+      noBtn.style.top = '50%';
+      yesBtn.style.transform = 'translate(-50%, -50%) scale(1)';
+      againBtn.style.display = 'none';
+      mainContent.style.display = 'block';
+    }
+
+    noBtn.addEventListener('click', () => {
+      const boxWidth = box.clientWidth;
+      const boxHeight = box.clientHeight;
+
+      const noWidth = noBtn.offsetWidth;
+      const noHeight = noBtn.offsetHeight;
+
+      const maxX = boxWidth - noWidth;
+      const maxY = boxHeight - noHeight;
+
+      const randX = Math.random() * maxX;
+      const randY = Math.random() * maxY;
+
+      noBtn.style.left = `${randX}px`;
+      noBtn.style.top = `${randY}px`;
+
+      clickCount++;
+
+      const yesScale = 1 + clickCount * 2.5;
+      yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
+
+      const noScale = Math.max(1 - clickCount * 0.15, 0);
+      noBtn.style.transform = `scale(${noScale})`;
+
+      if (noScale <= 0.1) {
+        noBtn.style.display = 'none';
+      }
+    });
+
+    yesBtn.addEventListener('click', () => {
+      // Hide main content behind
+      mainContent.style.display = 'none';
+
+      message.textContent = "🎉 Congratulations! 🎉";
+      info.textContent = "yeahhhhhhhhhhhhhh I Love You  ຍ່າຮົ້ວ!";
+      congratsImage.style.display = 'block';
+      yesBtn.disabled = true;
+      noBtn.disabled = true;
+      againBtn.style.display = 'inline-block';
+    });
+
+    againBtn.addEventListener('click', resetGame);
+
+    // Initialize game on page load
+    resetGame();
+  </script>
+
+</body>
+</html>
